@@ -30,7 +30,7 @@ export default {
     ...mapGetters([
       'sidebar'
     ]),
-    routes() {
+    routes() { 
       return this.$router.options.routes
     },
     activeMenu() {

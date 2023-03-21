@@ -28,23 +28,40 @@ const mutations = {
 }
 
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
+  // 登录 actions
+  async login({ commit }, userInfo) {
+    // 解构密码 账号
     const { username, password } = userInfo
-    return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
+    const result = await login({ username: username.trim(), password: password })
+    const { data } = result
+    if(result.code === 20000){
+      commit('SET_TOKEN', data.token)
+      setToken(data.token)
+      return 'ok'
+    }else{
+      return new Promise.reject(new Error('登录失败了'))
+    }
   },
 
-  // get user info
-  getInfo({ commit, state }) {
+  // get user info 获取用户信息actions
+  async getInfo({ commit, state }) {
+    const result = await getInfo(state.token)
+    // const { data } = result
+    // console.log(result);
+    // if(result.code === 20000 || result.code === 200){
+    //   if (!data) {
+    //     return reject('Verification failed, please Login again.')
+    //   }
+    //   console.log('1223');
+    //   const { name, avatar } = data
+
+    //   commit('SET_NAME', name)
+    //   commit('SET_AVATAR', avatar)
+    //   resolve(data)
+    //   return 'ok'
+    // }else{
+    //   return new Promise.reject(new Error('fail'))
+    // }
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { data } = response
